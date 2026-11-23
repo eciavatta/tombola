@@ -31,6 +31,7 @@
   --color-on-cell: var(--theme-on-cell);
   --color-cell-line: var(--theme-cell-line);
   --color-danger: var(--theme-danger);
+  --color-on-danger: var(--theme-on-danger);
 }
 
 :root,
@@ -51,6 +52,7 @@
   --theme-on-cell: #64748b;
   --theme-cell-line: transparent;
   --theme-danger: #dc2626;
+  --theme-on-danger: #ffffff;
 }
 
 :root[data-theme="dark"] {
@@ -70,6 +72,7 @@
   --theme-on-cell: #a1a1aa;
   --theme-cell-line: transparent;
   --theme-danger: #f87171;
+  --theme-on-danger: #18181b;
 }
 
 :root[data-theme="christmas"] {
@@ -89,6 +92,7 @@
   --theme-on-cell: #7c7366;
   --theme-cell-line: transparent;
   --theme-danger: #b91c1c;
+  --theme-on-danger: #ffffff;
 }
 
 :root[data-theme="contrast"] {
@@ -108,6 +112,7 @@
   --theme-on-cell: #d4d4d4;
   --theme-cell-line: #737373;
   --theme-danger: #ff6b6b;
+  --theme-on-danger: #000000;
 }
 
 /* Animations: short and subtle, disabled for users who prefer reduced motion. */

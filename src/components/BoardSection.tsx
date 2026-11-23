@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '../lib/motion'
 import { TOTAL_NUMBERS } from '../lib/series'
 import { Board } from './Board'
+import { useConfirm } from './confirm/context'
 import { EventLogo } from './EventLogo'
 import { labelCapsClass, panelClass, primaryButtonClass, secondaryButtonClass } from './ui'
 
@@ -23,6 +24,7 @@ export function BoardSection({ drawnNumbers, onDrawnNumbersChange }: BoardSectio
   const [rollingNumber, setRollingNumber] = useState<number | null>(null)
   const rollTimer = useRef<number | undefined>(undefined)
   const isRolling = rollingNumber !== null
+  const confirm = useConfirm()
 
   useEffect(() => () => window.clearInterval(rollTimer.current), [])
 
@@ -78,9 +80,15 @@ export function BoardSection({ drawnNumbers, onDrawnNumbersChange }: BoardSectio
     )
   }
 
-  const resetBoard = () => {
+  const resetBoard = async () => {
     if (drawnNumbers.length === 0) return
-    if (window.confirm('Vuoi azzerare il tabellone e iniziare una nuova partita?')) {
+    const confirmed = await confirm({
+      title: 'Iniziare una nuova partita?',
+      message: 'Il tabellone verrà azzerato. Potrai comunque recuperarlo con “Annulla mossa”.',
+      confirmLabel: 'Nuova partita',
+      tone: 'danger',
+    })
+    if (confirmed) {
       updateDrawnNumbers([])
     }
   }

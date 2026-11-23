@@ -5,6 +5,8 @@ const buttonBase =
 
 export const primaryButtonClass = `${buttonBase} bg-accent text-on-accent hover:bg-accent-hover disabled:hover:bg-accent`
 
+export const dangerButtonClass = `${buttonBase} bg-danger text-on-danger hover:opacity-90 disabled:hover:opacity-40`
+
 export const secondaryButtonClass = `${buttonBase} border border-line bg-surface text-fg hover:bg-subtle disabled:hover:bg-surface`
 
 export const inputClass =

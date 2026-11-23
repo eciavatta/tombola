@@ -11,6 +11,7 @@ import {
   type PrintSettings,
 } from '../../lib/printSettings'
 import { normalizeImage, readImage } from '../../lib/image'
+import { useConfirm } from '../confirm/context'
 import { CardTab } from './CardTab'
 import { primaryButtonClass, secondaryButtonClass } from '../ui'
 import { GeneralTab } from './GeneralTab'
@@ -59,6 +60,7 @@ export function PrintDialog({ onClose }: PrintDialogProps) {
   const [activeTab, setActiveTab] = useState<TabId>('general')
   const [error, setError] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const confirm = useConfirm()
 
   useEffect(() => {
     dialogRef.current?.showModal()
@@ -93,8 +95,15 @@ export function PrintDialog({ onClose }: PrintDialogProps) {
     }
   }
 
-  const handleReset = () => {
-    if (window.confirm('Ripristinare tutte le impostazioni predefinite? Il template resta caricato.')) {
+  const handleReset = async () => {
+    const confirmed = await confirm({
+      title: 'Ripristinare le impostazioni predefinite?',
+      message:
+        'Tutte le impostazioni di stampa torneranno ai valori iniziali. Il template caricato resta invariato.',
+      confirmLabel: 'Ripristina',
+      tone: 'danger',
+    })
+    if (confirmed) {
       setSettings(DEFAULT_PRINT_SETTINGS)
     }
   }
