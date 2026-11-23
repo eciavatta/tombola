@@ -15,7 +15,11 @@ export function CardsSection() {
           Genera le cartelle in serie da 6 e scaricale in un PDF pronto da stampare.
         </p>
       </div>
-      <button type="button" onClick={() => setIsDialogOpen(true)} className={primaryButtonClass}>
+      <button
+        type="button"
+        onClick={() => setIsDialogOpen(true)}
+        className={`${primaryButtonClass} shrink-0 whitespace-nowrap`}
+      >
         Stampa cartelle
       </button>
 

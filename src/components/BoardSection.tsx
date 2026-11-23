@@ -13,9 +13,15 @@ const ROLL_STEP_MS = 60
 interface BoardSectionProps {
   drawnNumbers: number[]
   onDrawnNumbersChange: (drawnNumbers: number[]) => void
+  /** Called when a number gets marked, by a draw or by a click (not by undo). */
+  onNumberMarked?: (value: number) => void
 }
 
-export function BoardSection({ drawnNumbers, onDrawnNumbersChange }: BoardSectionProps) {
+export function BoardSection({
+  drawnNumbers,
+  onDrawnNumbersChange,
+  onNumberMarked,
+}: BoardSectionProps) {
   const lastNumber = drawnNumbers.at(-1)
   const isComplete = drawnNumbers.length === TOTAL_NUMBERS
   // Previous states of the board, used to undo draws, clicks and resets.
@@ -56,6 +62,7 @@ export function BoardSection({ drawnNumbers, onDrawnNumbersChange }: BoardSectio
 
     if (remaining.length === 1 || prefersReducedMotion()) {
       updateDrawnNumbers([...drawnNumbers, value])
+      onNumberMarked?.(value)
       return
     }
 
@@ -69,15 +76,17 @@ export function BoardSection({ drawnNumbers, onDrawnNumbersChange }: BoardSectio
       window.clearInterval(rollTimer.current)
       setRollingNumber(null)
       updateDrawnNumbers([...drawnNumbers, value])
+      onNumberMarked?.(value)
     }, ROLL_STEP_MS)
   }
 
   const toggleNumber = (value: number) => {
-    updateDrawnNumbers(
-      drawnNumbers.includes(value)
-        ? drawnNumbers.filter((n) => n !== value)
-        : [...drawnNumbers, value],
-    )
+    if (drawnNumbers.includes(value)) {
+      updateDrawnNumbers(drawnNumbers.filter((n) => n !== value))
+    } else {
+      updateDrawnNumbers([...drawnNumbers, value])
+      onNumberMarked?.(value)
+    }
   }
 
   const resetBoard = async () => {

@@ -24,17 +24,20 @@ function hasTransparency(context: CanvasRenderingContext2D, width: number, heigh
 }
 
 /**
- * Reads an uploaded image, scales it down so that its longest side is at
- * most `maxSide` px (keeps PDFs and localStorage small) and encodes it as a
- * data URL: PNG only when it has transparent areas, JPEG otherwise.
+ * Draws an image file on a canvas, scaled down so that its longest side is
+ * at most `maxSide` px. Returns the canvas and the best output format:
+ * PNG only when the image has transparent areas, JPEG otherwise.
  */
-export async function readImage(file: File, maxSide: number): Promise<LoadedImage> {
+async function drawScaled(
+  file: Blob,
+  maxSide: number,
+): Promise<{ canvas: HTMLCanvasElement; type: 'image/png' | 'image/jpeg' }> {
   const objectUrl = URL.createObjectURL(file)
   try {
     const image = await loadImage(objectUrl)
     const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight))
-    const width = Math.round(image.naturalWidth * scale)
-    const height = Math.round(image.naturalHeight * scale)
+    const width = Math.max(1, Math.round(image.naturalWidth * scale))
+    const height = Math.max(1, Math.round(image.naturalHeight * scale))
 
     const canvas = document.createElement('canvas')
     canvas.width = width
@@ -42,14 +45,33 @@ export async function readImage(file: File, maxSide: number): Promise<LoadedImag
     const context = canvas.getContext('2d', { willReadFrequently: true })!
     context.drawImage(image, 0, 0, width, height)
 
-    const dataUrl = hasTransparency(context, width, height)
-      ? canvas.toDataURL('image/png')
-      : canvas.toDataURL('image/jpeg', JPEG_QUALITY)
-
-    return { dataUrl, width, height }
+    const type = hasTransparency(context, width, height) ? 'image/png' : 'image/jpeg'
+    return { canvas, type }
   } finally {
     URL.revokeObjectURL(objectUrl)
   }
+}
+
+/** Reads an uploaded image, scaled down to `maxSide`, as a data URL (for localStorage). */
+export async function readImage(file: Blob, maxSide: number): Promise<LoadedImage> {
+  const { canvas, type } = await drawScaled(file, maxSide)
+  return {
+    dataUrl: canvas.toDataURL(type, JPEG_QUALITY),
+    width: canvas.width,
+    height: canvas.height,
+  }
+}
+
+/** Reads an uploaded image, scaled down to `maxSide`, as a Blob (for IndexedDB). */
+export async function readImageBlob(file: Blob, maxSide: number): Promise<Blob> {
+  const { canvas, type } = await drawScaled(file, maxSide)
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error('Image encoding failed'))),
+      type,
+      JPEG_QUALITY,
+    )
+  })
 }
 
 /** Validates an image coming from localStorage or an imported file. */
