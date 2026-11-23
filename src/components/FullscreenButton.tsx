@@ -1,3 +1,4 @@
+import { trackEvent } from '../lib/analytics'
 import { secondaryButtonClass } from './ui'
 
 export function FullscreenButton() {
@@ -6,7 +7,10 @@ export function FullscreenButton() {
   return (
     <button
       type="button"
-      onClick={() => void document.documentElement.requestFullscreen()}
+      onClick={() => {
+        trackEvent('enter_fullscreen')
+        void document.documentElement.requestFullscreen()
+      }}
       title="Schermo intero (Esc per uscire)"
       className={`${secondaryButtonClass} px-3 py-1.5 text-sm`}
     >

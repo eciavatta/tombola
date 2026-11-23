@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tombola.eciavatta.dev/sitemap.xml

@@ -12,7 +12,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="Emiliano Ciavatta" />
     <link rel="author" href="https://eciavatta.dev/" />
-    <title>Tombola</title>
+
+    <!-- SEO. The public URL is also in public/robots.txt and public/sitemap.xml. -->
+    <title>Tombola online – Tabellone e generatore di cartelle gratis</title>
+    <meta
+      name="description"
+      content="Tombola online gratis: tabellone da 90 numeri con estrazione casuale, da proiettare a schermo intero, e generatore di cartelle in PDF personalizzabili, pronte da stampare."
+    />
+    <meta name="keywords" content="tombola, tombola online, tabellone tombola, cartelle tombola, cartelle tombola pdf, estrazione numeri tombola, tombola natale" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://tombola.eciavatta.dev/" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <!-- Link previews (WhatsApp, Facebook, Telegram, X, ...) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="Tombola" />
+    <meta property="og:url" content="https://tombola.eciavatta.dev/" />
+    <meta property="og:title" content="Tombola online – Tabellone e generatore di cartelle" />
+    <meta
+      property="og:description"
+      content="Tabellone da 90 numeri da proiettare e cartelle in PDF da stampare. Gratis, nel browser."
+    />
+    <meta property="og:image" content="https://tombola.eciavatta.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logo Tombola – Tabellone e generatore di cartelle" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tombola online – Tabellone e generatore di cartelle" />
+    <meta
+      name="twitter:description"
+      content="Tabellone da 90 numeri da proiettare e cartelle in PDF da stampare. Gratis, nel browser."
+    />
+    <meta name="twitter:image" content="https://tombola.eciavatta.dev/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Tombola",
+        "url": "https://tombola.eciavatta.dev/",
+        "description": "Tabellone da 90 numeri con estrazione casuale e generatore di cartelle della tombola in PDF.",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Any",
+        "inLanguage": "it",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "author": { "@type": "Person", "name": "Emiliano Ciavatta", "url": "https://eciavatta.dev/" }
+      }
+    </script>
     <script>
       // Apply the saved theme before the app loads, to avoid a flash of the wrong colors.
       // Keep in sync with src/lib/theme.ts.
@@ -31,6 +79,13 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Tombola online – Tabellone e generatore di cartelle</h1>
+      <p>
+        Tabellone da 90 numeri con estrazione casuale e generatore di cartelle in PDF. Per usare
+        l'applicazione attiva JavaScript nel browser.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,14 +1,17 @@
 import { useCallback, useState } from 'react'
 import { BoardSection } from './components/BoardSection'
 import { CardsSection } from './components/CardsSection'
+import { ConsentBanner } from './components/ConsentBanner'
 import { EventTitle } from './components/EventTitle'
 import { FullscreenButton } from './components/FullscreenButton'
 import { NumberImageOverlay } from './components/NumberImageOverlay'
 import { NumberImagesSection } from './components/NumberImagesSection'
 import { ThemeSelect } from './components/ThemeSelect'
+import { useAnalyticsConsent } from './hooks/useAnalyticsConsent'
 import { useFullscreen } from './hooks/useFullscreen'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useNumberImages } from './hooks/useNumberImages'
+import { isAnalyticsConfigured, trackEvent } from './lib/analytics'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -22,10 +25,12 @@ export default function App() {
   const shownImageUrl =
     shownImageNumber === null ? undefined : numberImages.images.get(shownImageNumber)
   const closeImage = useCallback(() => setShownImageNumber(null), [])
+  const [analyticsConsent, setAnalyticsConsent] = useAnalyticsConsent()
 
   const handleNumberMarked = (value: number) => {
     // A new number replaces the image of the previous one (or closes it).
     setShownImageNumber(value)
+    trackEvent('mark_number', { has_image: numberImages.images.has(value) })
   }
 
   return (
@@ -65,8 +70,23 @@ export default function App() {
         >
           Emiliano Ciavatta
         </a>
+        {isAnalyticsConfigured && (
+          <>
+            {' · '}
+            <button
+              type="button"
+              onClick={() => setAnalyticsConsent(null)}
+              className="cursor-pointer hover:text-fg presentation:hidden"
+            >
+              Preferenze cookie
+            </button>
+          </>
+        )}
       </footer>
 
+      {isAnalyticsConfigured && analyticsConsent === null && (
+        <ConsentBanner onChoice={setAnalyticsConsent} />
+      )}
 
       {shownImageNumber !== null && shownImageUrl && (
         <NumberImageOverlay

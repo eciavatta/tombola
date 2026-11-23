@@ -1,4 +1,5 @@
 import { useTheme } from '../hooks/useTheme'
+import { trackEvent } from '../lib/analytics'
 import { withViewTransition } from '../lib/motion'
 import { DARK_SCHEME_QUERY, normalizeThemePreference, resolveTheme, THEMES } from '../lib/theme'
 
@@ -18,6 +19,7 @@ export function ThemeSelect() {
             document.documentElement.dataset.theme = resolveTheme(next, prefersDark)
           })
           setPreference(next)
+          trackEvent('change_theme', { theme: next })
         }}
         className="cursor-pointer rounded-lg border border-line bg-surface px-3 py-1.5 text-sm text-fg focus:outline-2 focus:outline-accent"
       >

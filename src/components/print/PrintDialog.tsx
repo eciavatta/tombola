@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { trackEvent } from '../../lib/analytics'
 import { downloadPdf } from '../../lib/pdf'
 import { buildPages, generateCards } from '../../lib/printLayout'
 import {
@@ -114,6 +115,11 @@ export function PrintDialog({ onClose }: PrintDialogProps) {
     try {
       const pages = buildPages(generateCards(settings.cardCount), settings, template)
       await downloadPdf(pages, PDF_FILE_NAME)
+      trackEvent('download_cards', {
+        card_count: settings.cardCount,
+        cards_per_page: settings.cardsPerPage,
+        has_template: template !== null,
+      })
       close()
     } catch {
       setError('Errore durante la creazione del PDF.')

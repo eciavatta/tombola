@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { ImportResult, NumberImages } from '../hooks/useNumberImages'
+import { trackEvent } from '../lib/analytics'
 import { useConfirm } from './confirm/context'
 import { NumberField } from './print/fields'
 import { panelClass, primaryButtonClass, secondaryButtonClass } from './ui'
@@ -37,7 +38,9 @@ export function NumberImagesSection({ numberImages, onPreview }: NumberImagesSec
     ) {
       return
     }
-    setResult(await importFolder(files))
+    const imported = await importFolder(files)
+    setResult(imported)
+    trackEvent('load_number_images', { image_count: imported.loaded })
   }
 
   const handleClear = async () => {

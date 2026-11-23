@@ -12,7 +12,13 @@ export function EventTitle() {
   const [draft, setDraft] = useState<string | null>(null)
 
   useEffect(() => {
-    document.title = name
+    // Keep the SEO title of index.html unless the evening has its own name.
+    if (name === DEFAULT_EVENT_NAME) return
+    const seoTitle = document.title
+    document.title = `${name} · Tombola`
+    return () => {
+      document.title = seoTitle
+    }
   }, [name])
 
   const save = () => {
