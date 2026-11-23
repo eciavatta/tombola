@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* `presentation:` styles apply while the page is full screen (see useFullscreen). */
+@custom-variant presentation (&:where([data-presentation], [data-presentation] *));
+/* `stage:` styles: presentation mode on large screens, where everything fits one screen. */
+@custom-variant stage {
+  &:where([data-presentation], [data-presentation] *) {
+    @media (width >= 64rem) {
+      @slot;
+    }
+  }
+}
+
+/*
+ * Semantic colors: components only use these (bg-surface, text-muted,
+ * bg-accent, ...). Each theme just redefines the variables below.
+ */
+@theme inline {
+  --color-page: var(--theme-page);
+  --color-surface: var(--theme-surface);
+  --color-subtle: var(--theme-subtle);
+  --color-line: var(--theme-line);
+  --color-fg: var(--theme-fg);
+  --color-muted: var(--theme-muted);
+  --color-accent: var(--theme-accent);
+  --color-accent-hover: var(--theme-accent-hover);
+  --color-on-accent: var(--theme-on-accent);
+  --color-highlight: var(--theme-highlight);
+  --color-on-highlight: var(--theme-on-highlight);
+  --color-cell: var(--theme-cell);
+  --color-on-cell: var(--theme-on-cell);
+  --color-cell-line: var(--theme-cell-line);
+  --color-danger: var(--theme-danger);
+}
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --theme-page: #f8fafc;
+  --theme-surface: #ffffff;
+  --theme-subtle: #f1f5f9;
+  --theme-line: #e2e8f0;
+  --theme-fg: #0f172a;
+  --theme-muted: #64748b;
+  --theme-accent: #4f46e5;
+  --theme-accent-hover: #4338ca;
+  --theme-on-accent: #ffffff;
+  --theme-highlight: #f59e0b;
+  --theme-on-highlight: #1c1917;
+  --theme-cell: #f1f5f9;
+  --theme-on-cell: #64748b;
+  --theme-cell-line: transparent;
+  --theme-danger: #dc2626;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --theme-page: #18181b;
+  --theme-surface: #27272a;
+  --theme-subtle: #3f3f46;
+  --theme-line: #3f3f46;
+  --theme-fg: #fafafa;
+  --theme-muted: #a1a1aa;
+  --theme-accent: #818cf8;
+  --theme-accent-hover: #a5b4fc;
+  --theme-on-accent: #18181b;
+  --theme-highlight: #fbbf24;
+  --theme-on-highlight: #18181b;
+  --theme-cell: #333338;
+  --theme-on-cell: #a1a1aa;
+  --theme-cell-line: transparent;
+  --theme-danger: #f87171;
+}
+
+:root[data-theme="christmas"] {
+  color-scheme: light;
+  --theme-page: #faf7f2;
+  --theme-surface: #ffffff;
+  --theme-subtle: #f3eee6;
+  --theme-line: #e7dfd3;
+  --theme-fg: #1f2937;
+  --theme-muted: #6b6459;
+  --theme-accent: #b91c1c;
+  --theme-accent-hover: #991b1b;
+  --theme-on-accent: #ffffff;
+  --theme-highlight: #15803d;
+  --theme-on-highlight: #ffffff;
+  --theme-cell: #f3eee6;
+  --theme-on-cell: #7c7366;
+  --theme-cell-line: transparent;
+  --theme-danger: #b91c1c;
+}
+
+:root[data-theme="contrast"] {
+  color-scheme: dark;
+  --theme-page: #000000;
+  --theme-surface: #000000;
+  --theme-subtle: #1f1f1f;
+  --theme-line: #ffffff;
+  --theme-fg: #ffffff;
+  --theme-muted: #d4d4d4;
+  --theme-accent: #ffd60a;
+  --theme-accent-hover: #ffe55c;
+  --theme-on-accent: #000000;
+  --theme-highlight: #ffffff;
+  --theme-on-highlight: #000000;
+  --theme-cell: #000000;
+  --theme-on-cell: #d4d4d4;
+  --theme-cell-line: #737373;
+  --theme-danger: #ff6b6b;
+}
+
+/* Animations: short and subtle, disabled for users who prefer reduced motion. */
+@theme {
+  --animate-pop: pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-number-in: number-in 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-slide-in: slide-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-fade-in: fade-in 220ms ease-out;
+  --animate-dialog-in: dialog-in 260ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes pop {
+    0% { transform: scale(0.7); }
+    60% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+  @keyframes number-in {
+    0% { transform: scale(0.4); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes slide-in {
+    0% { transform: translateX(-0.75rem) scale(0.8); opacity: 0; }
+    100% { transform: none; opacity: 1; }
+  }
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes dialog-in {
+    0% { transform: translateY(1rem) scale(0.97); opacity: 0; }
+    100% { transform: none; opacity: 1; }
+  }
+}
+
+dialog[open]::backdrop {
+  animation: var(--animate-fade-in);
+}
+
+/* Theme switch: cross-fade between the old and the new colors. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 300ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after,
+  ::backdrop,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
